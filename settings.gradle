@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "GoogleNewsWebView"
+rootProject.name = "noodleMews.app"
 include ":app"

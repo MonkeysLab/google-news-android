@@ -15,9 +15,38 @@ android {
         minSdk 23
         targetSdk 35
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
         def webUrl = project.findProperty("GOOGLE_NEWS_WEB_URL") ?: "http://10.0.2.2:8100/"
         buildConfigField "String", "GOOGLE_NEWS_WEB_URL", "\"${webUrl}\""
+    }
+
+    signingConfigs {
+        release {
+            def releaseStoreFile = project.findProperty("ANDROID_RELEASE_STORE_FILE")
+            if (releaseStoreFile) {
+                storeFile file(releaseStoreFile)
+                storePassword project.findProperty("ANDROID_RELEASE_STORE_PASSWORD")
+                keyAlias project.findProperty("ANDROID_RELEASE_KEY_ALIAS")
+                keyPassword project.findProperty("ANDROID_RELEASE_KEY_PASSWORD")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+
+            if (project.findProperty("ANDROID_RELEASE_STORE_FILE")) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach {
+            outputFileName = "noodleMews.app-v${variant.versionName}-${variant.name}.apk"
+        }
     }
 }
